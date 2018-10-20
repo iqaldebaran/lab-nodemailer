@@ -54,6 +54,8 @@ router.post("/signup", (req, res, next) => {
     const hashPass = bcrypt.hashSync(password, salt);
     //Hash del email ----------------------------
     const hashEmail = bcrypt.hashSync(email, salt);
+    // hashEmail = hashEmail.replace(/\//g, '');
+
 
     const newUser = new User({
       username,
@@ -62,6 +64,8 @@ router.post("/signup", (req, res, next) => {
       confirmationCode: hashEmail
     });
 
+
+    newUser.save()
     //Manda email de verificacion
     let options = req.body;
     console.log("ups: ", options.username)
@@ -78,20 +82,9 @@ router.post("/signup", (req, res, next) => {
         })
       })
 
-    newUser.save()
-      .then(() => {
-        res.redirect("/");
-      })
-      .catch(err => {
-        res.render("auth/signup", {
-          message: "Something went wrong"
-        });
-      })
-
-
-
-
   });
+
+
 });
 
 router.get("/logout", (req, res) => {
